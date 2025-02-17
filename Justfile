@@ -47,6 +47,7 @@ clean:
     rm -f previous.manifest.json
     rm -f changelog.md
     rm -f output.env
+    rm -rf output
 
 # Sudo Clean Repo
 [group('Utility')]
@@ -82,28 +83,20 @@ _rootful_load_image $target_image=image_name $tag=default_tag:
         exit 0
     fi
 
-    set +e
-    resolved_tag=$(${PODMAN} inspect -t image "${target_image}:${tag}" | jq -r '.[].RepoTags.[0]')
-    return_code=$?
-    set -e
+    # Get the image digests for comparison
+    user_digest=$(${PODMAN} inspect -t image "${target_image}:${tag}" | jq ".[0].Id")
+    root_digest=$(${SUDOIF} ${PODMAN} inspect -t image "${target_image}:${tag}" | jq ".[0].Id")
 
-    if [[ $return_code -eq 0 ]]; then
-        # Load into Rootful ${PODMAN}
-        ID=$(${SUDOIF} ${PODMAN} images --filter reference="${target_image}:${tag}" --format "'{{ '{{.ID}}' }}'")
-        if [[ -z "$ID" ]]; then
-            COPYTMP=$(mktemp -p "${PWD}" -d -t _build_podman_scp.XXXXXXXXXX)
-            ${SUDOIF} TMPDIR=${COPYTMP} ${PODMAN} image scp ${UID}@localhost::"${target_image}:${tag}" root@localhost::"${target_image}:${tag}"
-            rm -rf "${COPYTMP}"
-        fi
-    else
-        # Make sure the image is present and/or up to date
-        ${SUDOIF} ${PODMAN} pull "${target_image}:${tag}"
+    # If digests don't match or root doesn't have the image, copy it
+    if [[ "$user_digest" != "$root_digest" ]]; then
+        COPYTMP=$(mktemp -p "${PWD}" -d -t _build_podman_scp.XXXXXXXXXX)
+        ${SUDOIF} TMPDIR=${COPYTMP} ${PODMAN} image scp ${UID}@localhost::"${target_image}:${tag}" root@localhost::"${target_image}:${tag}"
+        rm -rf "${COPYTMP}"
     fi
 
 _build-bib $target_image $tag $type $config: (_rootful_load_image target_image tag)
     #!/usr/bin/env bash
     set -euo pipefail
-
     mkdir -p "output"
 
     echo "Cleaning up previous build"
@@ -192,13 +185,14 @@ _run-vm $target_image $tag $type $config:
     run_args+=(docker.io/qemux/qemu-docker)
     ${PODMAN} run "${run_args[@]}" &
     xdg-open http://localhost:${port}
-    fg "%${PODMAN}"
+    wait
+    #fg "%${PODMAN}"
 
 [group('Run Virtual Machine')]
-run-vm-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "qcow2" "image-builder.config.toml")
+run-vm-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "qcow2" "image.toml")
 
 [group('Run Virtual Machine')]
-run-vm-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "raw" "image-builder.config.toml")
+run-vm-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "raw" "image.toml")
 
 [group('Run Virtual Machine')]
-run-vm-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "iso" "image-builder-iso.config.toml")
+run-vm-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "iso" "iso.toml")

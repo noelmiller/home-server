@@ -186,7 +186,6 @@ _run-vm $target_image $tag $type $config:
     ${PODMAN} run "${run_args[@]}" &
     xdg-open http://localhost:${port}
     wait
-    #fg "%${PODMAN}"
 
 [group('Run Virtual Machine')]
 run-vm-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "qcow2" "image.toml")

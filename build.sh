@@ -8,5 +8,5 @@ dnf install -y ansible-core firewalld cockpit cifs-utils && \
 
 # Enable services
 systemctl enable cockpit.socket
-systemctl enable mnt-containers_data.automount
+systemctl enable var-mnt-containers_data.automount
 systemctl enable podman.socket

@@ -1,3 +1,9 @@
 [[customizations.filesystem]]
 mountpoint = "/"
-minsize = "20 GiB"
+minsize = "50 GiB"
+
+[[customizations.user]]
+name = "noel"
+password = "noel"
+key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDB5OeiBUihcLAmfrRsaJMT/vfJVJ2uEf2mtxlWK8KTvfapNJhP973NSL7xInvu7L8/K5HimTZZs0mrZvcPQVD/Jo5p7091LvmZl29S63TO/RGT+xgH2+BurZsDE5BumZUB3iO7De7e2wMc9VEQjXcIIJ66JEjNSDuw4F7wSIifm8nhIU2WSJOYSQzs0A5SGwJ6xo9aIWvB0IChLNZSTiRAYp9VAnucGB5NPxpiPuDUsA/gW8lyo6rq6CWTisaId2E7gcVsSIXIISg4LPXIV792jo7ckUj6OqMUZz+NkvcYa7yuRXyIlSTrBTWGgBrZSrYT1cofY3BOVHuhtx06GetqRjtsUCCW/ju4VuuOAt91CHt8jsHXCdjF72UyrSB9dYX9C2yUVwQ0Tw5rSc5C6yF26Yxi3sZW95u5Hb0WDztjxuSSg+2tK08CynYgfDYasIz/yoWoxRQEr4ErvxeZWM3Me1rGSjW7p5ptu/pug4qjp4N15qY86TqiSHdR7LGio0k= noel@desktop.henrymillerfrazier.lan"
+groups = ["wheel"]

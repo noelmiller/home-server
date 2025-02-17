@@ -1,0 +1,19 @@
+[Unit]
+Description=A container used for Sabnzbd
+
+[Container]
+Image=lscr.io/linuxserver/sabnzbd:latest
+Pull=always
+ContainerName=sabnzbd
+HostName=sabnzbd
+Network=sabnzbd.network
+PublishPort=8081:8080
+Volume=/var/opt/containers/sabnzbd/config:/config:Z
+Volume=/var/opt/containers/sabnzbd/incomplete-downloads:/incomplete-downloads:Z
+Volume=/var/mnt/containers_data/files/Downloads:/downloads
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target multi-user.target

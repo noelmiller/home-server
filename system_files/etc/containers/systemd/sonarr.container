@@ -1,0 +1,18 @@
+[Unit]
+Description=A container used for Sonarr
+
+[Container]
+Image=lscr.io/linuxserver/sonarr:latest
+Pull=always
+ContainerName=sonarr
+PublishPort=8989:8989
+Network=sabnzbd.network
+Volume=/var/opt/containers/sonarr/config:/config:Z
+Volume=/var/mnt/containers_data/files/TV:/tv
+Volume=/var/mnt/containers_data/files/Downloads:/downloads
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target multi-user.target

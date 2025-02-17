@@ -1,0 +1,18 @@
+[Unit]
+Description=A container used for Radarr
+
+[Container]
+Image=lscr.io/linuxserver/radarr:latest
+Pull=always
+ContainerName=radarr
+Network=sabnzbd.network
+PublishPort=7878:7878
+Volume=/var/opt/containers/radarr/config:/config:Z
+Volume=/var/mnt/containers_data/files/Movies:/movies
+Volume=/var/mnt/containers_data/files/Downloads:/downloads
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target multi-user.target

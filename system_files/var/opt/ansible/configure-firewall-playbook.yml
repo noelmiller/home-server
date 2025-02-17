@@ -1,0 +1,18 @@
+- hosts: localhost
+  tasks:
+    - name: Enable service firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        enabled: true
+    - name: Open tcp ports
+      ansible.posix.firewalld:
+        offline: true
+        port: "{{ item }}/tcp"
+        permanent: true
+        state: enabled
+      loop:
+        - 22
+        - 9090
+        - 8081
+        - 8989
+        - 7878

@@ -1,0 +1,9 @@
+[Unit]
+Description=SMB Share Automount
+
+[Automount]
+Where=/var/mnt/containers_data
+TimeoutIdleSec=0
+
+[Install]
+WantedBy=multi-user.target

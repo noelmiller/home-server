@@ -1,0 +1,13 @@
+[Unit]
+Description=SMB Share Mount
+Requires=network-online.target
+After=network-online.target
+
+[Mount]
+What=//nas01.henrymillerfrazier.lan/data
+Where=/var/mnt/containers_data
+Type=cifs
+Options=credentials=/var/opt/smb.cred
+
+[Install]
+WantedBy=multi-user.target
